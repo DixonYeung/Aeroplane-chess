@@ -1,0 +1,312 @@
+<html>
+    <head>
+        <style>
+            #chessboard{
+                position: relative;
+                width: 800px;
+                height: 800px;
+                margin: 0 auto;
+                border: 1px solid black;
+            }
+            .base{
+                position: absolute;
+                margin: 0px;
+                width: 200px;
+                height: 200px;
+                border: 1px solid black;
+            }
+            #yellowBase{
+                top: 0px;
+                left: 0px;
+                background-color: yellow;
+            }
+            #greenBase{
+                top: 0px;
+                right: 0px;
+                background-color: green;
+            }
+            #redBase{
+                bottom: 0px;
+                right: 0px;
+                background-color: red;
+            }
+            #blueBase{
+                bottom: 0px;
+                left: 0px;
+                background-color: blue;
+            }
+            .chessPlate{
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                border: 1px solid black;
+            }
+            #whoseTurn{
+                display: flex;
+                width: 100px;
+                height: 50px;
+                border: 1px solid black;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+            }
+            #dice{
+                display: flex;
+                width: 50px;
+                height: 50px;
+                border: 1px solid black;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+            }
+            #rollDiceButton{
+                display: flex;
+                width: 100px;
+                height: 50px;
+                border: 1px solid black;
+                align-items: center;
+                justify-content: center;
+            }
+            #infoArea{
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                left: 50px;
+                top: 0px;
+                margin: 0 auto;
+            }
+            .plane{
+                border: 2px solid white;
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                /* background-color: white; */
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='chessboard'>
+            <div id='yellowBase' class="base"></div>
+            <div id='greenBase' class="base"></div>
+            <div id='redBase' class="base"></div>
+            <div id='blueBase' class="base"></div>
+            
+        </div>
+        <div id="infoArea">
+            <div id="whoseTurn" value="blue">blue turn</div>
+            <div id="dice">0</div>
+            <button id="rollDiceButton" onclick="rollDice()">roll a dice</button>
+        </div>
+        <script>
+
+            
+            var chessBoard = document.getElementById("chessboard");
+            var color = ['blue','yellow','green','red'];
+            
+            var base = [
+                document.getElementById('yellowBase'),
+                document.getElementById('greenBase'),
+                document.getElementById('redBase'),
+                document.getElementById('blueBase')
+            ];
+            var count = 0;
+            
+
+            var chessPlates = [];
+            // for(var i=0; i<12; i++){
+
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "250px";
+                    chessPlate.style.left = "calc(50px * "+j+" + 50px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc(250px - 50px * "+j+" - 50px)";
+                    chessPlate.style.left = "calc(50px * "+4+" + 50px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<5; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "0px";
+                    chessPlate.style.left = "calc(50px * "+j+" + 275px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc(250px + 50px * "+j+" - 200px)";
+                    chessPlate.style.left = "calc(50px * "+4+" + 100px + 200px)";
+                    chessPlates.push(chessPlate);
+                }
+
+
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "250px";
+                    chessPlate.style.left = "calc(50px * "+j+" + 100px + 450px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<5; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc(275px + 50px * "+j+")";
+                    chessPlate.style.left = "calc( 800px - 50px )";
+                    chessPlates.push(chessPlate);
+                }
+
+
+
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "500px";
+                    chessPlate.style.left = "calc( -50px * "+j+" + 100px + 50px * 4 + 400px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc(750px + 50px * "+j+" - 200px)";
+                    chessPlate.style.left = "calc(50px * "+4+" + 100px + 200px)";
+                    chessPlates.push(chessPlate);
+                }
+
+
+
+
+                
+                
+
+                
+                for(var j=0; j<5; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc( 800px - 50px )";
+                    chessPlate.style.left = "calc( -50px * "+j+" + 75px + 200px + 200px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc(800px - 100px  - 50px * "+j+")";
+                    chessPlate.style.left = "calc(50px * "+4+" + 50px )";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "500px";
+                    chessPlate.style.left = "calc( 50px * "+4+" - 50px * "+j+")";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<5; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc( -50px * "+j+" + 75px + 200px + 200px)";
+                    chessPlate.style.left = "0px";
+                    chessPlates.push(chessPlate);
+                }
+
+
+
+                for(var j=0; j<6; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    chessPlate.style.backgroundColor = 'blue';
+                    chessPlate.style.top =  "calc( 800px - 100px - 50px * "+j+" )";
+                    chessPlate.style.left = "calc( -50px * "+2+" + 75px + 200px + 200px)";
+                }
+                for(var j=0; j<6; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    chessPlate.style.backgroundColor = 'green';
+                    chessPlate.style.top =  "calc( 50px +  50px * "+j+" )";
+                    chessPlate.style.left = "calc( -50px * "+2+" + 75px + 200px + 200px)";
+                }
+                for(var j=0; j<6; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    chessPlate.style.backgroundColor = 'yellow';
+                    chessPlate.style.top =  "calc( -50px * "+2+" + 75px + 200px + 200px)";
+                    chessPlate.style.left = "calc( 50px + 50px * "+j+")";
+                }
+                for(var j=0; j<6; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    chessPlate.style.backgroundColor = 'red';
+                    chessPlate.style.top =  "calc(275px + 50px * "+2+")";
+                    chessPlate.style.left = "calc(800px - 100px - 50px * "+j+")";
+                }
+
+
+
+
+                for(var j=0 ; j<chessPlates.length; j++){
+                    chessPlates[j].style.backgroundColor = color[j%4];
+                }
+
+            var launchPosition = {'yellow':0, 'green':13, 'red':26, 'blue':39};
+            function rollDice(){
+                document.getElementById("dice").innerText = Math.floor(Math.random() * 6) + 1;
+                if(document.getElementById("dice").innerText == "6" && !document.getElementById(document.getElementById("whoseTurn").getAttribute("value"))){
+                    alert(document.getElementById("whoseTurn").getAttribute("value")+" rocket is launched");
+                    var plane = document.createElement("div");
+                    plane.setAttribute("class", "plane");
+                    plane.setAttribute("id", document.getElementById("whoseTurn").getAttribute("value"));
+                    plane.style.backgroundColor = document.getElementById("whoseTurn").getAttribute("value");
+                    chessPlates[launchPosition[document.getElementById("whoseTurn").getAttribute("value")]].appendChild(plane);
+                }
+                else if(document.getElementById(document.getElementById("whoseTurn").getAttribute("value"))){
+                    alert(document.getElementById("whoseTurn").getAttribute("value")+"'s' plane moved forward for "+ document.getElementById("dice").innerText +" plates");
+                    console.log(chessPlates[(chessPlates.indexOf(document.getElementById(document.getElementById("whoseTurn").getAttribute("value")).parentElement)+parseInt(document.getElementById("dice").innerText))%52]);
+                    chessPlates[(chessPlates.indexOf(document.getElementById(document.getElementById("whoseTurn").getAttribute("value")).parentElement)+parseInt(document.getElementById("dice").innerText))%52].appendChild(document.getElementById(document.getElementById("whoseTurn").getAttribute("value")).cloneNode());
+                    document.getElementById(document.getElementById("whoseTurn").getAttribute("value")).parentElement.removeChild(document.getElementById(document.getElementById("whoseTurn").getAttribute("value")));
+                    
+                }
+                document.getElementById("whoseTurn").setAttribute("value", color[(color.indexOf(document.getElementById("whoseTurn").getAttribute("value")) + 1) % 4]);
+                document.getElementById("whoseTurn").innerText = document.getElementById("whoseTurn").getAttribute("value") + " turn";
+                
+                
+            }
+            // }
+        </script>
+    </body>
+</html>
