@@ -1,0 +1,530 @@
+<html>
+    <head>
+        <style>
+            #chessboard{
+                position: relative;
+                width: 800px;
+                height: 800px;
+                margin: 0 auto;
+                border: 1px solid whitesmoke;
+            }
+            .base{
+                position: absolute;
+                margin: 0px;
+                width: 200px;
+                height: 200px;
+                border: 1px solid whitesmoke;
+            }
+            #yellowBase{
+                top: 0px;
+                left: 0px;
+                background-color: #ece42b;
+            }
+            #greenBase{
+                top: 0px;
+                right: 0px;
+                background-color: #4ea44e;
+            }
+            #redBase{
+                bottom: 0px;
+                right: 0px;
+                background-color: #f06864;
+            }
+            #blueBase{
+                bottom: 0px;
+                left: 0px;
+                background-color: #0b66b3;
+            }
+            .chessPlate{
+                display: flex;
+                position: absolute;
+                width: 48px;
+                height: 48px;
+                border: 1px solid whitesmoke;
+                align-items: center;
+                justify-content: center;
+            }
+            #whoseTurn{
+                display: flex;
+                width: 100px;
+                height: 50px;
+                border: 1px solid black;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+            }
+            #dice{
+                display: flex;
+                width: 50px;
+                height: 50px;
+                border: 1px solid black;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+            }
+            #rollDiceButton{
+                display: flex;
+                width: 100px;
+                height: 50px;
+                border: 1px solid black;
+                align-items: center;
+                justify-content: center;
+            }
+            #infoArea{
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                left: 50px;
+                top: 0px;
+                margin: 0 auto;
+            }
+            .plane{
+                /* border: 5px solid white;
+                
+                border-radius: 50%;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center; */
+            }
+            .plane.blue{
+                background-image: url('blueplane.png');
+                width: 46px;
+                height: 46px;
+                background-size:contain;
+            }
+            .plane.yellow{
+                background-image: url('yellowplane.png');
+                width: 46px;
+                height: 46px;
+                background-size:contain;
+            }
+            .plane.green{
+                background-image: url('greenplane.png');
+                width: 46px;
+                height: 46px;
+                background-size:contain;
+            }
+            .plane.red{
+                background-image: url('redplane.png');
+                width: 46px;
+                height: 46px;
+                background-size:contain;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id='chessboard'>
+            <div id='yellowBase' class="base">
+                <div class="plane yellow" id="yellowinbase"></div>
+            </div>
+            <div id='greenBase' class="base">
+                <div class="plane green" id="greeninbase"></div>
+            </div>
+            <div id='redBase' class="base">
+                <div class="plane red" id="redinbase"></div>
+            </div>
+            <div id='blueBase' class="base">
+                <div class="plane blue" id="blueinbase"></div>
+            </div>
+            
+        </div>
+        <div id="infoArea">
+            <div id="whoseTurn" value="blue">blue turn</div>
+            <div id="dice">0</div>
+            <button id="rollDiceButton" onclick="rollDice()">roll a dice</button>
+        </div>
+        <script>
+
+            
+            var chessBoard = document.getElementById("chessboard");
+            var color = ['blue','yellow','green','red'];
+            var colorCodes = ['#0b66b3','#ece42b','#4ea44e','#f06864'];
+            var colorObject = {
+                'blue':'#0b66b3',
+                'yellow':'#ece42b',
+                'green':'#4ea44e',
+                'red':'#f06864'
+            };
+            var blueColorCode = "#0b66b3";
+            var yellowColorCode = "#ece42b";
+            var greenColorCode = "#4ea44e";
+            var redColorCode = "#f06864";
+            
+            var base = [
+                document.getElementById('yellowBase'),
+                document.getElementById('greenBase'),
+                document.getElementById('redBase'),
+                document.getElementById('blueBase')
+            ];
+            var count = 0;
+            
+
+            var chessPlates = [];
+            // for(var i=0; i<12; i++){
+
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "250px";
+                    chessPlate.style.left = "calc(50px * "+j+" + 50px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc(250px - 50px * "+j+" - 50px)";
+                    chessPlate.style.left = "calc(50px * "+4+" + 50px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<5; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "0px";
+                    chessPlate.style.left = "calc(50px * "+j+" + 275px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc(250px + 50px * "+j+" - 200px)";
+                    chessPlate.style.left = "calc(50px * "+4+" + 100px + 200px)";
+                    chessPlates.push(chessPlate);
+                }
+
+
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "250px";
+                    chessPlate.style.left = "calc(50px * "+j+" + 100px + 450px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<5; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc(275px + 50px * "+j+")";
+                    chessPlate.style.left = "calc( 800px - 50px )";
+                    chessPlates.push(chessPlate);
+                }
+
+
+
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "500px";
+                    chessPlate.style.left = "calc( -50px * "+j+" + 100px + 50px * 4 + 400px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc(750px + 50px * "+j+" - 200px)";
+                    chessPlate.style.left = "calc(50px * "+4+" + 100px + 200px)";
+                    chessPlates.push(chessPlate);
+                }
+
+
+
+
+                
+                
+
+                
+                for(var j=0; j<5; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc( 800px - 50px )";
+                    chessPlate.style.left = "calc( -50px * "+j+" + 75px + 200px + 200px)";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc(800px - 100px  - 50px * "+j+")";
+                    chessPlate.style.left = "calc(50px * "+4+" + 50px )";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<4; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "500px";
+                    chessPlate.style.left = "calc( 50px * "+4+" - 50px * "+j+")";
+                    chessPlates.push(chessPlate);
+                }
+                for(var j=0; j<5; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    
+                    chessPlate.style.top =  "calc( -50px * "+j+" + 75px + 200px + 200px)";
+                    chessPlate.style.left = "0px";
+                    chessPlates.push(chessPlate);
+                }
+
+
+                var blueGoalStack = [];
+                var greenGoalStack = [];
+                var yellowGoalStack = [];
+                var redGoalStack = [];
+
+
+                for(var j=0; j<6; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    chessPlate.style.backgroundColor = blueColorCode;
+                    chessPlate.style.top =  "calc( 800px - 100px - 50px * "+j+" )";
+                    chessPlate.style.left = "calc( -50px * "+2+" + 75px + 200px + 200px)";
+                    chessPlate.setAttribute("value","goalStack");
+                    blueGoalStack.push(chessPlate);
+                }
+                for(var j=0; j<6; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    chessPlate.style.backgroundColor = greenColorCode;
+                    chessPlate.style.top =  "calc( 50px +  50px * "+j+" )";
+                    chessPlate.style.left = "calc( -50px * "+2+" + 75px + 200px + 200px)";
+                    chessPlate.setAttribute("value","goalStack");
+                    greenGoalStack.push(chessPlate);
+                }
+                for(var j=0; j<6; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    chessPlate.style.backgroundColor = yellowColorCode;
+                    chessPlate.style.top =  "calc( -50px * "+2+" + 75px + 200px + 200px)";
+                    chessPlate.setAttribute("value","goalStack");
+                    chessPlate.style.left = "calc( 50px + 50px * "+j+")";
+                    yellowGoalStack.push(chessPlate);
+                }
+                for(var j=0; j<6; j++){
+                    var chessPlate = document.createElement("DIV");
+                    chessPlate.classList.add('chessPlate');
+                    chessBoard.appendChild(chessPlate);
+                    chessPlate.style.backgroundColor = redColorCode;
+                    chessPlate.style.top =  "calc(275px + 50px * "+2+")";
+                    chessPlate.style.left = "calc(800px - 100px - 50px * "+j+")";
+                    chessPlate.setAttribute("value","goalStack");
+                    redGoalStack.push(chessPlate);
+                }
+
+
+
+
+                for(var j=0 ; j<chessPlates.length; j++){
+                    chessPlates[j].style.backgroundColor = colorObject[color[j%4]];
+                    chessPlates[j].setAttribute('value',color[j%4]);
+                }
+
+            var launchPosition = {'yellow':0, 'green':13, 'red':26, 'blue':39};
+            var goalPosition = {'yellow':49, 'green':10, 'red':23, 'blue':36};
+            var goalStack = {'yellow':yellowGoalStack, 'green':greenGoalStack, 'red':redGoalStack, 'blue':blueGoalStack};
+            var skipjumpPosition = {'yellow':17, 'green':30, 'red':43, 'blue':4};
+
+            var rolling = false;
+
+            function rollDice(){
+                if(rolling == true){
+                    return;
+                }
+                rolling = true;
+                document.getElementById("dice").innerText = Math.floor(Math.random() * 6) + 1;
+                var diceValue = parseInt(document.getElementById("dice").innerText);
+                console.log(document.getElementById("whoseTurn").getAttribute("value")+" rolled a : "+diceValue);
+                var timer = setTimeout(function(){
+                    clearTimeout(timer);
+                    if(document.getElementById("dice").innerText%2 == 0 && !document.getElementById(document.getElementById("whoseTurn").getAttribute("value"))){
+                        alert(document.getElementById("whoseTurn").getAttribute("value")+" rocket is launched");
+                        document.getElementById(document.getElementById("whoseTurn").getAttribute("value")+"inbase").style.display = "none";
+                        var plane = document.createElement("div");
+                        plane.setAttribute("class", "plane");
+                        plane.setAttribute("id", document.getElementById("whoseTurn").getAttribute("value"));
+                        plane.classList.add(document.getElementById("whoseTurn").getAttribute("value"));
+                        chessPlates[launchPosition[document.getElementById("whoseTurn").getAttribute("value")]].appendChild(plane);
+                        changeWhoseTurnText('launch');
+                    }
+                    //already in goal stack at first
+                    else if(document.getElementById(document.getElementById("whoseTurn").getAttribute("value")) && document.getElementById(document.getElementById("whoseTurn").getAttribute("value")).parentElement.getAttribute("value")=="goalStack"){
+                        alert(document.getElementById("whoseTurn").getAttribute("value")+"'s' plane moved forward for "+ document.getElementById("dice").innerText +" plates");
+                        var planeColor = document.getElementById("whoseTurn").getAttribute("value");
+                        runGoalProcess(diceValue, planeColor);
+                    }
+                    else if(document.getElementById(document.getElementById("whoseTurn").getAttribute("value"))){
+                        alert(document.getElementById("whoseTurn").getAttribute("value")+"'s' plane moved forward for "+ document.getElementById("dice").innerText +" plates");
+                        var planeColor = document.getElementById("whoseTurn").getAttribute("value");
+                        var count = 1;
+                        var animation = setInterval(function(){
+                            if(count > diceValue){
+                                
+                                clearInterval(animation);
+                                checkIfPlaneCanJump(planeColor);
+                            }
+                            else{
+                                //still in moving process, but some steps get into goal stack
+                                console.log(count);
+                                if(chessPlates.indexOf(document.getElementById(planeColor).parentElement) == goalPosition[planeColor]){
+                                    //enter goal plates
+                                    clearInterval(animation);
+                                    var clonePlane = document.getElementById(planeColor).cloneNode();
+                                    document.getElementById(planeColor).parentElement.removeChild(document.getElementById(planeColor));
+                                    goalStack[planeColor][0].appendChild(clonePlane);
+                                    runGoalProcess( diceValue - count, planeColor);
+                                    
+                                }
+                                else{
+                                    var clonePlane = document.getElementById(planeColor).cloneNode();
+                                    var oldPlanePosition = chessPlates.indexOf(document.getElementById(planeColor).parentElement);
+                                    document.getElementById(planeColor).parentElement.removeChild(document.getElementById(planeColor));
+                                    chessPlates[(oldPlanePosition + 1)%52].appendChild(clonePlane);
+                                    count ++;
+                                }
+                            }
+                        }, 150);
+                    }
+                    else{
+                        changeWhoseTurnText('no launch');
+                    }
+                }, 100);
+                
+                
+                
+            }
+
+            function checkIfPlaneCanJump(planeColor){
+                
+                if(document.getElementById(planeColor).getAttribute('id') == document.getElementById(planeColor).parentElement.getAttribute('value') && chessPlates.indexOf(document.getElementById(planeColor).parentElement) != goalPosition[planeColor]){
+                    
+                    console.log(document.getElementById(planeColor).getAttribute("id") + " has jumped !!!");
+                    if(  chessPlates.indexOf(document.getElementById(planeColor).parentElement) ==  skipjumpPosition[planeColor]  ){
+                        performSkipJump(planeColor);
+                    }
+                    else{
+                        var count = 1;
+                        var animation = setInterval(function(){
+                            console.log(count);
+                            if(count>4){
+                                clearInterval(animation);
+                                if(  chessPlates.indexOf(document.getElementById(planeColor).parentElement) ==  skipjumpPosition[planeColor]  ){
+                                    performSkipJump(planeColor);
+                                }
+                                else{
+                                    changeWhoseTurnText('jump');
+                                }
+                            }
+                            else{
+                                var clonePlane = document.getElementById(planeColor).cloneNode();
+                                var oldPlanePosition = chessPlates.indexOf(document.getElementById(planeColor).parentElement);
+                                document.getElementById(planeColor).parentElement.removeChild(document.getElementById(planeColor));
+                                chessPlates[(oldPlanePosition + 1)%52].appendChild(clonePlane);
+                                count ++;
+                            }
+                            
+                        }, 100);
+                    }
+                    
+                    
+                }
+                
+                else{
+                    changeWhoseTurnText('normal');
+                }
+            }
+
+
+            function runGoalProcess(numberOfStepsLeft, planeColor){
+                var reversed = false;
+                var count = 1;
+                var animation = setInterval(function(){
+                    if(count>=numberOfStepsLeft){
+                        clearInterval(animation);
+                        changeWhoseTurnText('goalstack');
+                    }
+                    var clonePlane = document.getElementById(planeColor).cloneNode();
+                    var oldPlanePosition = goalStack[planeColor].indexOf(document.getElementById(planeColor).parentElement);
+                    document.getElementById(planeColor).parentElement.removeChild(document.getElementById(planeColor));
+                    if((oldPlanePosition + 1) >= goalStack[planeColor].length){
+                        reversed = !reversed;
+                    }
+                    else if( (oldPlanePosition -1) < 0 && reversed == true){
+                        reversed = !reversed;
+                    }
+                    if(reversed){
+                        goalStack[planeColor][(oldPlanePosition -1)].appendChild(clonePlane);
+                    }
+                    else{
+                        goalStack[planeColor][(oldPlanePosition + 1)].appendChild(clonePlane);
+                    }
+                    count ++;
+                }, 150);
+            }
+
+
+            function performSkipJump(planeColor){
+                var count = 0;
+                var xInterval = 0;
+                var yInterval = 0;
+                yInterval = (chessPlates[(skipjumpPosition[planeColor]+12)%52].getBoundingClientRect().y - document.getElementById(planeColor).getBoundingClientRect().y)/5;
+                xInterval = (chessPlates[(skipjumpPosition[planeColor]+12)%52].getBoundingClientRect().x - document.getElementById(planeColor).getBoundingClientRect().x)/5;
+                document.getElementById(planeColor).style.position = 'absolute';
+                document.getElementById(planeColor).style.zIndex = 999;
+                var animation = setInterval(function(){
+                    if(count>=5){
+                        clearInterval(animation);
+                        var clonePlane = document.getElementById(planeColor).cloneNode();
+                        document.getElementById(planeColor).parentElement.removeChild(document.getElementById(planeColor));
+                        chessPlates[(skipjumpPosition[planeColor]+12)%52].appendChild(clonePlane);
+                        clonePlane.style.position = 'unset';
+                        clonePlane.style.zIndex = 'unset';
+                        clonePlane.style.top = 'unset';
+                        clonePlane.style.left = 'unset';
+                        changeWhoseTurnText('jump far side');
+                    }
+                    else{
+                        var planeX;
+                        var planeY;
+                        document.getElementById(planeColor).style.top.replace('px','') == "" ? planeX=0 : planeX = document.getElementById(planeColor).style.top.replace('px','');
+                        document.getElementById(planeColor).style.left.replace('px','') == "" ? planeY=0 : planeY = document.getElementById(planeColor).style.left.replace('px','');
+                        document.getElementById(planeColor).style.top = ( parseFloat( planeX ) + yInterval )+ 'px';
+                        document.getElementById(planeColor).style.left = ( parseFloat( planeY ) + xInterval ) + 'px';
+                        count ++;
+                    }
+                }, 80);
+            }
+
+            function changeWhoseTurnText(message){
+                document.getElementById("whoseTurn").setAttribute("value", color[(color.indexOf(document.getElementById("whoseTurn").getAttribute("value")) + 1) % 4]);
+                document.getElementById("whoseTurn").innerText = document.getElementById("whoseTurn").getAttribute("value") + " turn";
+                // console.log(message);
+                document.getElementById("dice").textContent = "";
+                rolling = false;
+            }
+            // }
+        </script>
+    </body>
+</html>
