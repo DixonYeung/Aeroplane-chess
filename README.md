@@ -2,7 +2,7 @@
 
 ### This html is an aeroplane chess game (飛行棋)
 ### Development Time limit : 180 minutes
-![alt text](https://github.com/DixonYeung/time-limited-plane-chess/blob/main/Screenshot-2021-03-26-011254.jpg?raw=true)
+//![alt text](https://github.com/DixonYeung/time-limited-plane-chess/blob/main/Screenshot-2021-03-26-011254.jpg?raw=true)
 
 #### Each player only have one plane
 #### Press "roll dice" to roll a dice, dice number is displayed
